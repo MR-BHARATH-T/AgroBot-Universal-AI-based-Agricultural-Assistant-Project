@@ -1,7 +1,8 @@
+<!--chat.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <title>Agri Chatbot</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -22,42 +23,126 @@
     {% endfor %}
   </div>
 
+  {#<form id="chat-form" class="chat-form"> #}
+    {#<select id="lang" name="lang"> #}
+      {#<option value="en">English</option> #}
+      {#<option value="ta">தமிழ்</option> #}
+      {#<option value="hi">हिन्दी</option> #}
+      {#<option value="te">తెలుంగు</option> #}
+      {#<option value="ml">മലയാളം</option> #}
+      {#<option value="kn">ಕನ್ನಡ</option> #}
+    {#</select> #}
+    {#<input id="message" name="message" placeholder="Ask about crops, soil, pests..." autocomplete="off" required> #}
+    {#<button type="submit">Send</button> #}
+  {#</form> #}
+
   <form id="chat-form" class="chat-form">
-    <select id="lang" name="lang">
-      <option value="en">English</option>
-      <option value="ta">தமிழ்</option>
-      <option value="hi">हिन्दी</option>
-      <option value="te">తెలుంగు</option>
-      <option value="ml">മലയാളം</option>
-      <option value="kn">ಕನ್ನಡ</option>
-    </select>
-    <input id="message" name="message" placeholder="Ask about crops, soil, pests..." autocomplete="off" required>
-    <button type="submit">Send</button>
-  </form>
+  <input id="message" name="message" placeholder="Ask anything about agriculture...!" autocomplete="off" required>
+  <button type="submit">Send</button>
+</form>
+
+
 </div>
 
 <script>
-$(function(){
+$(function() {
   const chatBox = $("#chat-box");
-  $("#chat-form").on("submit", function(e){
+
+  $("#chat-form").on("submit", function(e) {
     e.preventDefault();
     const text = $("#message").val().trim();
-    const lang = $("#lang").val();
-    if(!text) return;
-    // append user
+    if (!text) return;
+
     chatBox.append(`<div class="user-msg">👤 ${$('<div>').text(text).html()}</div>`);
     $("#message").val("");
     chatBox.scrollTop(chatBox[0].scrollHeight);
 
-    $.post("/chat", { message: text, lang: lang }, function(data){
-      chatBox.append(`<div class="bot-msg">🌾 ${$('<div>').text(data.response).html()}</div>`);
-      chatBox.scrollTop(chatBox[0].scrollHeight);
-    }, "json").fail(function(){
-      chatBox.append(`<div class="bot-msg">🌾 Sorry, something went wrong.</div>`);
-      chatBox.scrollTop(chatBox[0].scrollHeight);
+    const botDiv = $('<div class="bot-msg streaming">🤖 <span class="phase-tag">🌾 Local Insight</span><br><span class="bot-text"></span><span class="cursor">▋</span></div>');
+    chatBox.append(botDiv);
+    const botTextSpan = botDiv.find(".bot-text");
+    const cursorSpan = botDiv.find(".cursor");
+    const phaseTag = botDiv.find(".phase-tag");
+
+    let phase = "thinking";
+    let colorFade = 0.0;
+    const fadeSpeed = 0.05;
+
+    // Thinking dots animation before streaming starts
+    let dots = 0;
+    const thinkingAnim = setInterval(() => {
+      dots = (dots + 1) % 4;
+      botTextSpan.text("Thinking" + ".".repeat(dots));
+    }, 400);
+
+    fetch("/chat", {
+      method: "POST",
+      body: new URLSearchParams({ message: text }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+    .then(res => {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            clearInterval(thinkingAnim);
+            cursorSpan.remove();
+            return;
+          }
+
+          const chunk = decoder.decode(value, { stream: true });
+
+          // Start of streaming
+          if (phase === "thinking") {
+            clearInterval(thinkingAnim);
+            botTextSpan.text("");
+            phase = "offline";
+            botDiv.css("color", "#0fa64b"); // green for offline
+          }
+
+          if (chunk.includes("[OFFLINE]")) {
+            // Gradual offline typing
+            const chars = chunk.replace(/\[OFFLINE\]/g, "").split("");
+            chars.forEach((c, i) => {
+              setTimeout(() => {
+                botTextSpan.append(c);
+                chatBox.scrollTop(chatBox[0].scrollHeight);
+              }, i * 15);
+            });
+          } else {
+            // Online tokens
+            if (phase === "offline") {
+              phase = "online";
+              phaseTag.text("☁️ AI Assistant");
+              // smooth green→blue fade
+              let fadeInterval = setInterval(() => {
+                colorFade += fadeSpeed;
+                const t = Math.min(colorFade, 1);
+                const r = Math.round(15 + (11 - 15) * t);
+                const g = Math.round(166 + (92 - 166) * t);
+                const b = Math.round(75 + (255 - 75) * t);
+                botDiv.css("color", `rgb(${r},${g},${b})`);
+                if (t >= 1) clearInterval(fadeInterval);
+              }, 50);
+            }
+            botTextSpan.append(chunk);
+            chatBox.scrollTop(chatBox[0].scrollHeight);
+          }
+
+          read();
+        });
+      }
+      read();
+    })
+    .catch(() => {
+      clearInterval(thinkingAnim);
+      cursorSpan.remove();
+      botTextSpan.text("🌾 Error in response.");
     });
   });
 });
 </script>
+
 </body>
 </html>

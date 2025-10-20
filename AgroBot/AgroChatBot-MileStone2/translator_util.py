@@ -27,23 +27,25 @@
 
 
 
+#translator_util.py
+from langdetect import detect
+from googletrans import Translator
 
-from deep_translator import GoogleTranslator
+translator = Translator()
 
-translator = GoogleTranslator(source='auto', target='en')
-
-def translate_text(text, dest="en"):
+def detect_language(text: str) -> str:
+    """Detect language code (like en, hi, ta, te, ml, kn)."""
     try:
-        result = GoogleTranslator(source='auto', target=dest).translate(text)
-        return result
-    except Exception as e:
-        print(f"Translation error: {e}")
-        return text
-
-def detect_language(text):
-    try:
-        from langdetect import detect
-        return detect(text)
-    except Exception as e:
-        print(f"Language detection error: {e}")
+        lang = detect(text)
+        return lang
+    except Exception:
         return "en"
+
+def translate_text(text: str, dest_lang: str) -> str:
+    """Translate text safely."""
+    try:
+        if not text.strip():
+            return ""
+        return translator.translate(text, dest=dest_lang).text
+    except Exception:
+        return text

@@ -79,3 +79,47 @@ th{ background:var(--brand); color:#fff; }
   .auth-container, .chat-container, .dashboard { margin: 16px; width: calc(100% - 32px) }
   .chat-box{ height: 50vh }
 }
+
+/* 🌈 Animated color fade (green → blue) for streaming bot replies */
+@keyframes fadeGreenToBlue {
+  0% {
+    color: #047857; /* starting green */
+  }
+  100% {
+    color: #0b5cff; /* ending blue */
+  }
+}
+
+.bot-msg {
+  text-align: left;
+  margin: 8px 0;
+  color: #047857;
+  transition: color 0.8s ease;
+}
+
+/* Apply animation to newly streamed bot text */
+.bot-msg.streaming {
+  animation: fadeGreenToBlue 2s ease forwards;
+}
+
+/* 🌈 Gradient text effect */
+.gradient-text {
+  background: linear-gradient(90deg, #0fa64b, #0b5cff);
+  background-size: 200%;
+  background-position: 0%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-sweep 3s linear infinite;
+}
+
+@keyframes gradient-sweep {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.phase-tag {
+  font-size: 0.8em;
+  opacity: 0.8;
+  font-style: italic;
+  color: #666;
+}
