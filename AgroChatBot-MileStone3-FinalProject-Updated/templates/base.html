@@ -1,0 +1,122 @@
+<!-- base.html (Topbar + Left Sidebar layout) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title|default("AI-AgroBot Pro v2") }}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="left-sidebar glass" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-top">
+        <a class="brand" href="{{ url_for('index') }}">
+          <img src="{{ url_for('static', filename='bot.png') }}" class="logo" alt="AI-AgroBot">
+          <div class="brand-text">
+            <strong>AI-AgroBot</strong><br>
+            <small class="muted">Pocket agronomist</small>
+          </div><br>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item" href="{{ url_for('index') }}">🏠 Home</a>
+        <a class="nav-item" href="{{ url_for('chat') }}">💬 Chat</a>
+        <a class="nav-item" href="{{ url_for('profile') }}">👤 Profile</a>
+
+        {% if current_user.is_authenticated and current_user.role == 'admin' %}
+          <hr>
+          <a class="nav-item" href="{{ url_for('admin_dashboard') }}">🛠️ Admin</a>
+          <a class="nav-item" href="{{ url_for('admin_view_user', user_id=current_user.id) }}">👥 Users</a>
+        {% endif %}
+      </nav>
+
+      <div class="sidebar-bottom">
+        {% if current_user.is_authenticated %}
+          <div class="small muted">Signed in as</div>
+          <div class="sidebar-user">
+            <strong>{{ current_user.name or current_user.email }}</strong>
+            <div class="muted small">{{ current_user.primary_crop or '—' }} • {{ current_user.region or '—' }}</div>
+            <a class="btn small" href="{{ url_for('logout') }}">Logout</a>
+          </div>
+        {% else %}
+          <a class="btn small" href="{{ url_for('login') }}">Login</a>
+          <a class="btn small ghost" href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-area">
+      <!-- TOPBAR -->
+      <header class="topbar glass" role="banner">
+        <div class="topbar-left">
+          <button id="sidebarToggle" class="icon-btn small-toggle" aria-label="Toggle sidebar">☰</button>
+          <div class="top-search muted">
+            <!-- placeholder for future search -->
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button id="themeToggle" class="icon-btn small-toggle" title="Toggle theme">🌓</button>
+          {% if current_user.is_authenticated %}
+            <a class="nav-link" href="{{ url_for('profile') }}">Hi, {{ current_user.name.split(' ')[0] if current_user.name else current_user.email }}</a>
+          {% endif %}
+        </div>
+      </header>
+
+      <main class="main" role="main">
+        {% with msgs = get_flashed_messages(with_categories=true) %}
+        {% if msgs %}
+          <div class="flashes">
+            {% for cat,msg in msgs %}
+              <div class="flash {{cat}}">{{msg}}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="footer glass">
+        <div class="footer-inner">
+          <small>© 2025 AI-AgroBot</small>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const shell = document.querySelector('.app-shell');
+  const sidebar = document.querySelector('.left-sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+
+  let isOpen = true;
+
+  function toggleSidebar() {
+    isOpen = !isOpen;
+
+    if (isOpen) {
+      shell.classList.remove('sidebar-collapsed');
+      document.body.classList.remove('sidebar-hidden');
+    } else {
+      shell.classList.add('sidebar-collapsed');
+      document.body.classList.add('sidebar-hidden');
+    }
+  }
+
+  toggleBtn.addEventListener('click', toggleSidebar);
+});
+</script>
+
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+<!-- END OF base.html -->

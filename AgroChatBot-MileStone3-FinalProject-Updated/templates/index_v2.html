@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- HERO -->
+<section class="hero fade-in">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <img src="{{ url_for('static', filename='bot.png') }}" alt="AI-AgroBot" class="hero-logo">
+
+      <h1 class="hero-title">Your Smart AI Agronomist — Always Ready To Help You Grow</h1>
+      <p class="hero-sub">
+        Practical, region-aware farming advice, instant image analysis, and step-by-step guidance — all in your pocket.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="{{ url_for('chat') }}" class="btn cta-btn">Ask the Agronomist</a>
+        <a href="{{ url_for('chat') }}" class="btn ghost">Explore Features</a>
+      </div>
+
+      <div class="hero-meta">
+        <span>Trusted by farmers & agronomists • Offline-safe UI • Privacy-friendly</span>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="visual-card glass">
+        <img src="{{ url_for('static', filename='img/card-ai-1.png') }}" class="visual-img">
+        <div class="visual-caption">Crop health snapshot</div>
+      </div>
+
+      <div class="visual-card glass small">
+        <img src="{{ url_for('static', filename='img/card-ai-2.png') }}" class="visual-img">
+        <div class="visual-caption">Pest detection</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features slide-up"" class="features">
+  <div class="features-inner">
+    <h2 class="section-title">What AI-AgroBot Can Do</h2>
+    <p class="section-sub">Practical tools designed for field use — fast answers, clear advice.</p>
+
+    <div class="feature-grid">
+
+      <article class="feature glass">
+        <div class="feature-media">
+          <img src="{{ url_for('static', filename='img/card-ai-1.png') }}">
+        </div>
+        <h3>Instant Image Analysis</h3>
+        <p>Upload a crop photo — get health, stress, and action steps instantly.</p>
+      </article>
+
+      <article class="feature glass">
+        <div class="feature-media">
+          <img src="{{ url_for('static', filename='img/card-ai-3.png') }}">
+        </div>
+        <h3>Soil & Fertilizer Guidance</h3>
+        <p>Region-based fertilizer plans and soil improvement steps.</p>
+      </article>
+
+      <article class="feature glass">
+        <div class="feature-media">
+          <img src="{{ url_for('static', filename='img/card-ai-2.png') }}">
+        </div>
+        <h3>Pest & Disease Alerts</h3>
+        <p>Identify pests, diseases, and suggested control methods.</p>
+      </article>
+
+      <article class="feature glass">
+        <div class="feature-media">
+          <img src="{{ url_for('static', filename='img/card-ai-4.png') }}">
+        </div>
+        <h3>Personalized Advice</h3>
+        <p>Answers adapt to your saved crop, region & language.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

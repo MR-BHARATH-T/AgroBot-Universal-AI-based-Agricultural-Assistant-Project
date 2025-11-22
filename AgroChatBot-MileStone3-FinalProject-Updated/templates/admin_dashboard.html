@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="admin-section">
+  <h2 class="admin-title">Admin Dashboard</h2>
+
+  <div class="admin-grid">
+    <!-- KB -->
+    <section class="admin-card glass">
+      <h3 class="admin-subtitle">Knowledge Base</h3>
+
+      <form method="post" action="{{ url_for('admin_edit_kb') }}">
+        <textarea name="kb_data" rows="10" class="kb-textarea">{{ kb_content or '' }}</textarea>
+        <div class="admin-actions"> <br>
+          <button class="btn" type="submit">💾 Save Knowledge Base</button>
+        </div>
+      </form>
+      <br> <br>
+      <h4 class="admin-subsubtitle">Import KB (CSV)</h4>
+      <form method="post" action="{{ url_for('admin_upload_kb_csv') }}" enctype="multipart/form-data">
+        <input class="file-input" type="file" name="csv_file" accept=".csv" required>
+        <div class="admin-actions"><br>
+          <button class="btn" type="submit">📤 Upload CSV</button>
+        </div>
+        <small class="muted">Format: keywords, answer_en, answer_hi, answer_ta, answer_ka, answer_ma, answer_te</small>
+      </form>
+    </section>
+
+    <!-- USERS -->
+    <section class="admin-card glass">
+      <h3 class="admin-subtitle">User Accounts</h3>
+
+      {% if users %}
+      <table class="table admin-table zebra">
+        <thead>
+          <tr><th>ID</th><th>Email</th><th>Name</th><th>Role</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.name }}</td>
+            <td><span class="role-tag {{ 'role-admin' if u.role=='admin' else 'role-user' }}">{{ u.role }}</span></td>
+            <td>
+              {% if u.role != 'admin' %}
+              <form method="post" action="{{ url_for('admin_delete_user', user_id=u.id) }}" style="display:inline;">
+                <button class="btn small danger" type="submit" onclick="return confirm('Delete user?')">Delete</button>
+              </form>
+              {% else %}
+                <span class="muted small">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <div class="empty-state glass">
+          <p class="muted">No users found yet. New signups will appear here.</p>
+        </div>
+      {% endif %}
+    </section>
+  </div>
+
+  <!-- Recent Conversations -->
+  <section class="admin-card glass admin-wide">
+    <div class="admin-header-row">
+      <h3 class="admin-subtitle">Recent Conversations</h3>
+      <form method="post" action="{{ url_for('admin_clear_chats') }}" onsubmit="return confirm('Delete all chat history?');">
+        <button class="btn danger" type="submit">🧹 Clear All Chats</button>
+      </form>
+    </div>
+
+    {% if chats %}
+      <table class="table admin-table zebra">
+        <thead><tr><th>User</th><th>Message</th><th>Reply</th><th>Time</th></tr></thead>
+        <tbody>
+          {% for c in chats %}
+          <tr>
+            <td>{{ c.user_id or 'Guest' }}</td>
+            <td>{{ c.user_message }}</td>
+            <td>{{ c.bot_response }}</td>
+            <td>{{ c.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="empty-state glass">
+        <p class="muted">No recent conversations. The chat log will appear here.</p>
+      </div>
+    {% endif %}
+  </section>
+</section>
+
+{% endblock %}

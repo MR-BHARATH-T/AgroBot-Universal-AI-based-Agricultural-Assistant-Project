@@ -1,0 +1,504 @@
+/* ============================================================
+   AI–AgroBot — Hybrid GPT–Agro Fusion (UPGRADED — Option B)
+   Keeps original classes & layout; visual & interaction upgrades
+   ============================================================ */
+
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root{
+  /* Core palette */
+  --bg: #F3F6EB;
+  --text: #1E2A20;
+  --muted: #7A857A;
+
+  --accent: #4C8C2B;          /* leaf green */
+  --accent-contrast: #ffffff;
+
+  /* Aurora */
+  --aurora-1: #7de3ff;
+  --aurora-2: #b97eff;
+  --aurora-soft: rgba(122,220,255,0.06);
+
+  /* Glass tokens */
+  --glass: rgba(255,255,250,0.76);
+  --surface: rgba(255,255,245,0.84);
+  --glass-border: rgba(180,180,170,0.30);
+  --glass-blur: 14px;
+
+  --shadow-soft: 0 10px 30px rgba(20,30,18,0.06);
+  --shadow-strong: 0 18px 44px rgba(0,0,0,0.10);
+
+  --radius: 14px;
+  --sidebar-width: 250px;
+
+  /* Input tokens (light) */
+  --input-text: #2a2f28;
+  --input-placeholder: #7a857a;
+
+  /* timing */
+  --fast: 140ms;
+  --medium: 240ms;
+}
+
+/* ---------- Dark theme overrides ---------- */
+:root[data-theme='dark']{
+  --bg: #08100C;
+  --text: #EAF6EB;
+  --muted: #9BB39A;
+
+  --accent: #8FD35A;
+  --accent-contrast: #061007;
+
+  --glass: rgba(12,18,14,0.54);
+  --surface: rgba(16,24,18,0.56);
+  --glass-border: rgba(255,255,255,0.06);
+
+  --shadow-soft: 0 14px 34px rgba(0,0,0,0.55);
+  --shadow-strong: 0 22px 56px rgba(0,0,0,0.65);
+
+  --aurora-soft: rgba(185,130,255,0.06);
+
+  /* input tokens for dark */
+  --input-text: #dce4d7;
+  --input-placeholder: #93a093;
+}
+
+/* ---------- Base reset & body ---------- */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text)}
+a{color:inherit;text-decoration:none}
+
+/* subtle field texture + aurora fog */
+body{
+  background-image:
+    radial-gradient(900px 500px at 10% 10%, rgba(76,140,43,0.04), transparent 60%),
+    radial-gradient(700px 380px at 88% 82%, rgba(185,130,255,0.03), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg));
+  transition: background .28s ease, color .22s ease;
+}
+
+/* ============================================================
+   App layout: sidebar + topbar (keeps existing class names)
+   ============================================================ */
+
+.app-shell{
+  display:grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height:100vh;
+  transition: grid-template-columns .28s ease;
+}
+
+/* sidebar sliding on collapsed class */
+.app-shell.sidebar-collapsed { grid-template-columns: 0 1fr; }
+/* .left-sidebar{
+  position:sticky;top:0;height:100vh;padding:20px 16px;
+  background: linear-gradient(180deg, var(--glass), color-mix(in srgb, var(--glass) 70%, transparent));
+  border-right:1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+  display:flex;flex-direction:column;gap:20px;transition:transform .28s ease,opacity .25s ease;z-index:220;
+  box-shadow: var(--shadow-soft);
+} */
+.left-sidebar {
+  background: color-mix(in srgb, var(--glass) 75%, transparent);
+  backdrop-filter: blur(14px) saturate(150%);
+}
+
+.app-shell.sidebar-collapsed .left-sidebar{ transform:translateX(-100%); opacity:0 }
+
+/* brand */
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:12px;object-fit:cover}
+.brand-text strong{font-size:17px}
+.brand-text small{font-size:12px;color:var(--muted)}
+
+/* nav items */
+.sidebar-nav{display:flex;flex-direction:column;gap:8px}
+.nav-item{padding:10px 12px;border-radius:10px;font-size:15px;transition:transform var(--fast),background var(--fast)}
+.nav-item:hover{transform:translateX(6px);background:rgba(0,0,0,0.04)}
+
+/* bottom area */
+.sidebar-bottom{margin-top:auto;padding-top:18px;border-top:1px solid var(--glass-border)}
+.sidebar-user{display:flex;flex-direction:column;gap:6px}
+
+/* ============================================================
+   Topbar
+   ============================================================ */
+
+/* ===== Elegant Transparent Topbar (theme dynamic) ===== */
+.topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+
+  background: color-mix(in srgb, var(--glass) 65%, transparent);
+  backdrop-filter: blur(14px) saturate(150%);
+  border-bottom: 1px solid var(--glass-border);
+
+  box-shadow: var(--shadow-soft);
+  transition: background .28s ease;
+}
+
+.topbar-left{display:flex;align-items:center;gap:12px}
+.small-toggle{background:none;border:0;cursor:pointer;font-size:20px;padding:6px;border-radius:8px; color:var(--accent);transition:transform var(--fast)}
+.small-toggle:active{transform:scale(.96)}
+.small-toggle:hover{background:rgba(0,0,0,0.04)}
+
+/* topbar right */
+.topbar-right{display:flex;align-items:center;gap:12px}
+.icon-btn{background:transparent;border:1px solid var(--glass-border);padding:8px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.icon-btn:hover{transform:translateY(-3px);box-shadow:var(--shadow-soft)}
+
+/* main area & footer */
+.main-area{display:flex;flex-direction:column}
+.main{padding:28px;transition:padding .18s ease}
+.footer{padding:16px;text-align:center;font-size:13px;color:var(--muted);border-top:1px solid var(--glass-border);background:var(--surface)}
+
+/* flashes */
+.flashes{margin-bottom:18px}
+.flash{padding:10px 14px;border-radius:10px;margin-bottom:6px}
+.flash.success{background:#d2f5cd}
+.flash.error{background:#f8d1d1}
+
+/* ============================================================
+   HERO (keeps classes)
+   ============================================================ */
+
+.hero{
+  padding:50px 30px;border-radius:var(--radius);
+  background:
+    radial-gradient(600px 260px at 90% 10%, rgba(185,130,255,0.08), transparent 40%),
+    radial-gradient(680px 300px at 10% 90%, rgba(122,220,255,0.06), transparent 40%),
+    linear-gradient(180deg, var(--glass), rgba(255,255,255,0.02));
+  box-shadow:var(--shadow-strong);
+}
+.hero-inner{display:flex;align-items:center;justify-content:space-between;gap:36px}
+.hero-title{font-size:32px;font-weight:700;line-height:1.2}
+.hero-sub{color:var(--muted);margin-top:8px}
+
+/* visual cards */
+.visual-card{border-radius:12px;padding:14px;background:var(--surface);box-shadow:var(--shadow-soft);text-align:center}
+.visual-img{width:160px;height:auto;border-radius:10px}
+.visual-caption{font-size:14px;color:var(--muted);margin-top:8px}
+
+/* ============================================================
+   CHAT PAGE (keeps all classes)
+   ============================================================ */
+
+.chat-section{padding:10px}
+.chat-inner{display:grid;grid-template-columns:300px 1fr;gap:20px}
+
+/* sidebar panel inside chat */
+.chat-sidebar{
+  background:var(--surface);padding:20px;border-radius:var(--radius);border:1px solid var(--glass-border);
+  box-shadow:var(--shadow-soft)
+}
+.user-list{list-style:none;margin-top:8px}
+.user-list li{margin-bottom:6px}
+.user-list a{color:var(--accent)}
+
+/* chat panel and header */
+.chat-panel{display:flex;flex-direction:column;gap:14px;position:relative}
+/* .chat-header{
+  padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.28));
+  border-radius:12px;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;backdrop-filter: blur(6px);
+  box-shadow:var(--shadow-soft)
+} */
+.chat-header {
+  padding: 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--glass) 68%, transparent);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px) saturate(150%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-title{display:flex;align-items:center;gap:12px}
+.chat-logo{width:48px;border-radius:12px}
+
+/* messages container w/ aurora fog */
+.messages{
+  height:60vh;padding:18px;overflow:auto;border-radius:16px;
+  background:
+    radial-gradient(500px 280px at 15% 80%, rgba(122,220,255,0.06), transparent 40%),
+    radial-gradient(600px 240px at 88% 10%, rgba(185,130,255,0.04), transparent 40%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border:1px solid var(--glass-border);box-shadow:inset 0 6px 18px rgba(0,0,0,0.04);
+  position:relative;
+}
+
+/* message base */
+.message{display:flex;margin:12px 0;position:relative;align-items:flex-end}
+.message.user{justify-content:flex-end}
+.message.bot{justify-content:flex-start}
+
+/* bubble styling */
+.bubble{
+  padding:12px 14px;border-radius:12px;max-width:80%;line-height:1.45;position:relative;transition:transform var(--fast),box-shadow var(--fast)
+}
+
+/* user bubble – leaf green */
+.user .bubble{
+  background:linear-gradient(140deg,var(--accent), color-mix(in srgb,var(--accent) 70%, black 10%));
+  color:var(--accent-contrast);box-shadow:0 14px 34px rgba(76,140,43,0.18);border-bottom-right-radius:8px;display:inline-flex;align-items:center;gap:8px
+}
+.user .meta{font-size:12px;color:rgba(255,255,255,0.95)}
+
+/* bot bubble – aurora + glass */
+.bot .bubble{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.04);color:var(--text);border-bottom-left-radius:8px;backdrop-filter: blur(6px);
+  box-shadow:0 12px 36px rgba(24,28,30,0.06)
+}
+/* aurora accent strip */
+.bot .bubble::before{
+  content:'';position:absolute;left:0;top:0;width:8px;height:100%;border-top-left-radius:12px;border-bottom-left-radius:12px;
+  background:linear-gradient(180deg,var(--aurora-1),var(--aurora-2));opacity:.98
+}
+/* soft glow behind bot bubble */
+.bot .bubble::after{
+  content:'';position:absolute;inset:-6px;border-radius:16px;background:
+    radial-gradient(40% 70% at 10% 30%, rgba(125,225,255,0.06), transparent 10%),
+    radial-gradient(40% 70% at 80% 70%, rgba(185,120,255,0.04), transparent 10%);
+  filter:blur(12px);opacity:.9;z-index:-1;pointer-events:none
+}
+
+/* streaming text improvements */
+.streaming .message-text{white-space:normal;letter-spacing:0.1px}
+
+/* message image */
+.chat-image{max-width:320px;border-radius:10px;display:block;margin-top:6px}
+
+/* ============================================================
+   ACTION ICONS (copy, edit, reply, regen)
+   ============================================================ */
+
+/* message action toolbar */
+.msg-actions{display:flex;gap:8px;align-items:center;margin-left:10px;z-index:10}
+
+/* icon-only button base */
+.action-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(0,0,0,0.06);
+  cursor:pointer;transition:transform .12s ease,box-shadow .12s ease,background .12s ease,color .12s ease;
+  color:var(--muted);backdrop-filter: blur(6px)
+}
+.action-btn svg{width:16px;height:16px;pointer-events:none;display:block;stroke:currentColor;fill:none;opacity:.95}
+
+/* hover / focus states */
+.action-btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.08);background:rgba(255,255,255,0.02);color:var(--text)}
+.action-btn:active{transform:scale(.95)}
+
+/* variants */
+.action-btn.copy{border-color:rgba(140,160,140,0.12)}
+.action-btn.edit{border-color:rgba(76,140,43,0.10)}
+.action-btn.reply{border-color:rgba(140,160,200,0.10)}
+.action-btn.regen{border-color:rgba(122,220,255,0.15);background:linear-gradient(180deg, rgba(122,220,255,0.02), transparent)}
+
+/* only latest bot message shows regen (JS will add class 'latest-bot') */
+.message.bot:not(.latest-bot) .action-btn.regen{display:none}
+
+/* tiny label fallback for a11y */
+.action-btn[title]{position:relative}
+
+/* small "copy feedback" animation (applies via JS by toggling class .copied) */
+.action-btn.copied{animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+/* ============================================================
+   SHIMMER / THINKING / LEAVES
+   ============================================================ */
+
+.skeleton-bubble{width:220px;height:56px;border-radius:12px;background:linear-gradient(90deg, rgba(200,235,210,0.14) 0%, rgba(255,255,255,0.5) 50%, rgba(200,235,210,0.14) 100%);background-size:200% 100%;animation:shimmer 1.6s linear infinite;margin-bottom:8px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.think-dots{display:flex;gap:8px;margin-top:8px}
+.think-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(180deg,var(--aurora-1),var(--aurora-2));opacity:0;animation:think 1.2s infinite}
+.think-dot:nth-child(1){animation-delay:.08s}
+.think-dot:nth-child(2){animation-delay:.24s}
+.think-dot:nth-child(3){animation-delay:.4s}
+@keyframes think{0%{transform:translateY(0);opacity:.2}50%{transform:translateY(-8px);opacity:1}100%{transform:translateY(0);opacity:.2}}
+
+/* leaf particles (keeps .leaf .leaf-container) */
+.leaf-container{position:absolute;inset:0;pointer-events:none;z-index:5}
+.leaf{position:absolute;width:20px;height:20px;background:url('/static/leaf.png') no-repeat center/contain;opacity:.9;animation:leafFloat 3.8s ease-in-out infinite}
+@keyframes leafFloat{0%{transform:translateY(0) rotate(0) scale(.96)}50%{transform:translateY(-26px) rotate(18deg) scale(1)}100%{transform:translateY(0) rotate(0) scale(.96)}}
+
+/* streaming text */
+.streaming .message-text{white-space:pre-wrap}
+
+/* ============================================================
+   CHAT FORM
+   ============================================================ */
+
+.chat-form{display:flex;gap:8px;margin-top:8px;align-items:center}
+.chat-form input{flex:1;padding:12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--surface);color:var(--input-text);transition:box-shadow .12s ease,border-color .12s ease}
+.chat-form input:focus{outline:none;box-shadow:0 6px 20px rgba(76,140,43,0.12);border-color:color-mix(in srgb,var(--accent) 70%,black 8%)}
+.chat-form .btn{padding:12px 16px;border-radius:10px}
+
+/* voice button */
+#voiceBtn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;border:none;background:linear-gradient(180deg,var(--accent), color-mix(in srgb,var(--accent) 60%, black 10%));color:var(--accent-contrast);cursor:pointer}
+#voiceBtn.listening{box-shadow:0 12px 36px rgba(0,0,0,0.12);transform:scale(1.02)}
+#voiceBtn.listening::after{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:40px;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--aurora-1),var(--aurora-2));filter:blur(8px);opacity:.9;animation:wave 1s linear infinite}
+@keyframes wave{0%{transform:translateY(-50%) scaleX(.88)}50%{transform:translateY(-50%) scaleX(1.05)}100%{transform:translateY(-50%) scaleX(.88)}}
+
+/* file button */
+.file-btn{display:inline-flex;align-items:center;gap:6px;padding:10px;border-radius:10px;background:var(--accent);color:var(--accent-contrast);cursor:pointer;border:none}
+
+/* send button primary */
+.btn.primary{background:var(--accent);color:var(--accent-contrast);box-shadow:0 10px 30px rgba(76,140,43,0.12)}
+
+/* ============================================================
+   ADMIN & TABLES
+   ============================================================ */
+
+.admin-section{padding:20px}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:28px}
+.admin-card{padding:20px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--glass-border);box-shadow:var(--shadow-soft)}
+.admin-wide{grid-column:1 / -1}
+.admin-subtitle{font-size:20px;margin-bottom:12px}
+
+/* table style */
+.table{width:100%;border-collapse:collapse;font-size:15px}
+.table th{text-align:left;padding:10px;background:rgba(0,0,0,0.04)}
+.table td{padding:12px;border-bottom:1px solid var(--glass-border);vertical-align:middle}
+.zebra tr:nth-child(even){background:rgba(0,0,0,0.03)}
+.table tr:hover{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));transform:translateY(0);box-shadow:inset 0 4px 12px rgba(0,0,0,0.03)}
+
+/* role badges */
+.role-tag{padding:6px 10px;border-radius:10px;font-size:13px;background:rgba(0,0,0,0.04)}
+.role-admin{background:linear-gradient(180deg,#f4e9ff,#e8dcff);color:#6d3cf5}
+.role-user{background:linear-gradient(180deg,#ecf8e6,#e8f7d6);color:var(--accent)}
+
+/* empty states */
+.empty-state{padding:30px;text-align:center;border-radius:var(--radius);font-size:15px;border:1px dashed var(--glass-border);color:var(--muted)}
+
+/* kb textarea monospace */
+.kb-textarea{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));border:1px solid var(--glass-border)}
+
+/* ============================================================
+   AUTH (login/register/profile)
+   ============================================================ */
+
+.auth-card{max-width:420px;margin:40px auto;padding:28px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--glass-border);box-shadow:var(--shadow-soft)}
+.auth-card h2{text-align:center;margin-bottom:18px}
+.auth-card label{display:block;margin-bottom:12px;font-size:14px;color:var(--muted)}
+.auth-card input,.auth-card select,textarea{width:100%;padding:10px;margin-top:6px;border-radius:10px;background:var(--glass);border:1px solid var(--glass-border);color:var(--input-text);transition:box-shadow .12s ease}
+.auth-card input:focus,.auth-card select:focus,textarea:focus{outline:none;box-shadow:0 8px 28px rgba(76,140,43,0.10);border-color:color-mix(in srgb,var(--accent) 70%,black 6%)}
+
+/* actions */
+.actions{margin-top:16px;display:flex;justify-content:center;gap:8px}
+
+/* ============================================================
+   Accessibility & small tweaks
+   ============================================================ */
+
+/* focus outline */
+a:focus,button:focus,input:focus,textarea:focus{outline:3px solid color-mix(in srgb,var(--accent) 25%, white 75%);outline-offset:2px}
+
+/* hidden utilities */
+.tiny-flash{position:fixed;right:20px;bottom:20px;background:var(--surface);padding:8px 12px;border-radius:10px;box-shadow:var(--shadow-soft);opacity:0;transform:translateY(6px);transition:all .25s ease;z-index:999}
+.tiny-flash.visible{opacity:1;transform:translateY(0)}
+
+/* responsiveness */
+@media (max-width:1000px){
+  .chat-inner{grid-template-columns:1fr}
+  .app-shell{grid-template-columns:0 1fr}
+  .left-sidebar{position:fixed;left:0;top:0;width:var(--sidebar-width);height:100vh}
+  .messages{height:50vh}
+}
+@media (max-width:560px){
+  .visual-img{width:120px}
+  .messages{height:50vh;padding:12px}
+  .action-btn{width:30px;height:30px}
+}
+
+/* ============================================================
+   DARK MODE — input text visibility (FINAL polished patch)
+   Place inside your dark root (already declared above)
+   ============================================================ */
+
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] textarea,
+:root[data-theme='dark'] select {
+  color: #dce4d7 !important;      /* visible soft grey */
+}
+:root[data-theme='dark'] input::placeholder,
+:root[data-theme='dark'] textarea::placeholder {
+  color: #93a093 !important;
+  opacity:1;
+}
+
+/* ensure general input token usage */
+.chat-form input,
+.auth-card input,
+.auth-card select,
+textarea,
+input {
+  color: var(--input-text);
+}
+input::placeholder,textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+
+/* ===== Global Button Upgrade ===== */
+.btn, button, input[type="submit"], .file-btn {
+  font-size: 15px;
+  padding: 10px 18px !important;
+
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+
+  background: var(--accent);
+  color: var(--accent-contrast);
+
+  box-shadow: 0 8px 20px rgba(76,140,43,0.20);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btn:hover, button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(76,140,43,0.25);
+}
+
+.btn:active, button:active {
+  transform: scale(.96);
+}
+
+/* Ghost buttons → soft green outline */
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn.ghost:hover {
+  background: rgba(76,140,43,0.08);
+}
+
+/* Danger buttons → tomato red */
+.btn.danger {
+  background: #d9534f;
+  color: white;
+  box-shadow: 0 8px 20px rgba(217,83,79,0.25);
+}
+.btn.danger:hover {
+  box-shadow: 0 14px 28px rgba(217,83,79,0.35);
+}
+
+
+.glass {
+  background: color-mix(in srgb, var(--glass) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid var(--glass-border);
+}
+
+
+/* ============================================================
+   End of style.css
+   ============================================================ */

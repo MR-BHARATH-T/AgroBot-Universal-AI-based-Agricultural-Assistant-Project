@@ -1,0 +1,696 @@
+/* ============================================================
+   AI–AgroBot — Hybrid GPT–Agro Fusion UI
+   Full project CSS: Chat, Home, Admin, Auth, Sidebar, Topbar
+   ============================================================ */
+
+/* FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ROOT VARIABLES (Light theme) */
+:root {
+  --bg: #F3F6EB;
+  --text: #1E2A20;
+  --muted: #7A857A;
+
+  --accent: #4C8C2B;
+  --accent-contrast: #ffffff;
+
+  --glass: rgba(255, 255, 245, 0.72);
+  --surface: rgba(255, 255, 240, 0.82);
+  --glass-border: rgba(180, 180, 170, 0.35);
+  --shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+
+  --radius: 14px;
+  --blur: 14px;
+
+  --aurora-1: #7de3ff;
+  --aurora-2: #b97eff;
+  --aurora-soft: rgba(122, 220, 255, 0.06);
+
+  --sidebar-width: 250px;
+}
+
+/* DARK THEME */
+:root[data-theme='dark'] {
+  --bg: #0B100C;
+  --text: #EBF6EB;
+  --muted: #9DB5A1;
+
+  --accent: #88D14C;
+  --accent-contrast: #0A0F0B;
+
+  --glass: rgba(15, 22, 16, 0.55);
+  --surface: rgba(24, 30, 22, 0.55);
+  --glass-border: rgba(255,255,255,0.08);
+
+  --shadow: 0 18px 44px rgba(0,0,0,0.45);
+  --aurora-soft: rgba(185,130,255,0.06);
+}
+
+/* GLOBAL RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ============================================================
+   APP LAYOUT: SIDEBAR + TOPBAR
+   ============================================================ */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+}
+
+/* collapse on mobile */
+.app-shell.sidebar-collapsed .left-sidebar {
+  transform: translateX(-100%);
+}
+
+/* LEFT SIDEBAR */
+.left-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--glass-border);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  backdrop-filter: blur(var(--blur));
+  transition: transform .25s ease;
+  z-index: 200;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.brand .logo {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+}
+.brand-text strong { font-size: 17px; }
+.brand-text small { font-size: 12px; color: var(--muted); }
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nav-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: .15s ease;
+}
+.nav-item:hover {
+  background: rgba(0,0,0,0.06);
+  transform: translateX(4px);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--glass-border);
+}
+.sidebar-user {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* TOPBAR */
+.topbar {
+  height: 64px;
+  background: var(--surface);
+  backdrop-filter: blur(calc(var(--blur) - 4px));
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  box-shadow: var(--shadow);
+  z-index: 150;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.small-toggle {
+  background: none; border: none; cursor: pointer;
+  font-size: 20px;
+  padding: 6px;
+  border-radius: 8px;
+  transition: 0.15s ease;
+  color: var(--accent);
+}
+.small-toggle:hover { background: rgba(39, 43, 39, 0.54); }
+
+/* MAIN AREA */
+.main-area { display: flex; flex-direction: column; }
+.main { padding: 28px; }
+
+/* FLASH MESSAGES */
+.flashes { margin-bottom: 18px; }
+.flash { padding: 10px 14px; border-radius: 10px; margin-bottom: 6px; }
+.flash.success { background: #d2f5cd; }
+.flash.error { background: #f8d1d1; }
+
+/* FOOTER */
+.footer {
+  padding: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  border-top: 1px solid var(--glass-border);
+  background: var(--surface);
+}
+
+/* ============================================================
+   HERO SECTION (Aurora Fog)
+   ============================================================ */
+
+.hero {
+  padding: 50px 30px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(600px 260px at 90% 10%, rgba(185,130,255,0.1), transparent 40%),
+    radial-gradient(680px 300px at 10% 90%, rgba(122,220,255,0.1), transparent 40%),
+    var(--glass);
+  box-shadow: var(--shadow);
+}
+.hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+.hero-logo { width: 74px; margin-bottom: 14px; }
+.hero-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.hero-sub {
+  font-size: 17px;
+  margin: 10px 0 20px;
+  color: var(--muted);
+}
+.hero-cta-group { display: flex; gap: 14px; margin-bottom: 14px; }
+
+/* VISUAL CARDS */
+.visual-card {
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--surface);
+  display: inline-block;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.visual-img {
+  width: 160px;
+  height: auto;
+  border-radius: 10px;
+}
+.visual-caption { margin-top: 6px; font-size: 14px; color: var(--muted); }
+
+/* ============================================================
+   CHAT PAGE
+   ============================================================ */
+
+.chat-section { padding: 10px; }
+.chat-inner {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
+
+/* CHAT SIDEBAR */
+.chat-sidebar {
+  background: var(--surface);
+  padding: 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+}
+.user-list { list-style: none; margin-top: 8px; }
+.user-list li { margin-bottom: 6px; }
+.user-list a { color: var(--accent); }
+
+/* CHAT PANEL */
+.chat-panel { display: flex; flex-direction: column; gap: 14px; }
+
+/* CHAT HEADER */
+.chat-header {
+  padding: 12px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chat-title {
+  display: flex; align-items: center; gap: 12px;
+}
+.chat-logo { width: 48px; border-radius: 12px; }
+
+/* MESSAGES */
+.messages {
+  height: 60vh;
+  padding: 18px;
+  overflow-y: auto;
+  border-radius: 16px;
+  background:
+    radial-gradient(500px 280px at 15% 80%, rgba(122,220,255,0.07), transparent 40%),
+    radial-gradient(600px 240px at 88% 10%, rgba(185,130,255,0.07), transparent 40%),
+    linear-gradient(180deg, var(--glass), transparent);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* MESSAGE BUBBLES */
+.message {
+  display: flex;
+  margin: 12px 0;
+  position: relative;
+}
+.message.user { justify-content: flex-end; }
+.message.bot { justify-content: flex-start; }
+
+.bubble {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  max-width: 80%;
+  position: relative;
+  line-height: 1.45;
+}
+
+/* USER BUBBLE (leaf green) */
+.user .bubble {
+  background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 70%, black 10%));
+  color: var(--accent-contrast);
+  box-shadow: 0 14px 30px rgba(76,140,43,0.18);
+  border-bottom-right-radius: 6px;
+}
+
+/* BOT BUBBLE (Aurora fusion) */
+.bot .bubble {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  border-bottom-left-radius: 6px;
+  backdrop-filter: blur(8px);
+}
+
+/* AURORA STRIP */
+.bot .bubble::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 6px; height: 100%;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  background: linear-gradient(180deg, var(--aurora-1), var(--aurora-2));
+}
+
+/* ============================================================
+   SHIMMER / THINKING / LEAVES / STREAMING
+   ============================================================ */
+
+.skeleton-bubble {
+  width: 220px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(90deg,
+    rgba(200,230,200,0.17) 0%,
+    rgba(255,255,255,0.55) 50%,
+    rgba(200,230,200,0.17) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* THINK DOTS */
+.think-dots {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+}
+.think-dot {
+  width: 8px; height: 8px;
+  background: linear-gradient(180deg,var(--aurora-1),var(--aurora-2));
+  border-radius: 50%;
+  opacity: 0;
+  animation: think 1.2s infinite;
+}
+@keyframes think {
+  0%{ opacity:.2; transform:translateY(0); }
+  50%{ opacity:1; transform:translateY(-8px); }
+ 100%{ opacity:.2; transform:translateY(0); }
+}
+
+/* LEAF FLOAT PARTICLES */
+.leaf-container { position:absolute; inset:0; pointer-events:none; z-index:5; }
+.leaf {
+  position:absolute;
+  width:22px; height:22px;
+  background:url('/static/leaf.png') center/contain no-repeat;
+  animation: leafFloat 3.6s ease-in-out infinite;
+}
+@keyframes leafFloat {
+  0%{ transform:translateY(0) rotate(0); opacity:.8; }
+ 50%{ transform:translateY(-26px) rotate(20deg); opacity:1; }
+100%{ transform:translateY(0) rotate(0); opacity:.8; }
+}
+
+/* STREAMING TEXT */
+.streaming .message-text {
+  white-space: normal;
+  letter-spacing: .2px;
+}
+
+/* ============================================================
+   CHAT FORM
+   ============================================================ */
+
+.chat-form {
+  display: flex; gap: 8px; margin-top: 6px;
+}
+.chat-form input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+}
+.chat-form .btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+/* BUTTONS */
+.btn {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 15px;
+  transition: .15s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+
+.btn.primary { background: var(--accent); }
+.btn.ghost {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+}
+.btn.small { padding: 6px 10px; font-size: 13px; }
+
+.btn.danger { background: #d9534f; }
+
+/* ============================================================
+   ADMIN DASHBOARD
+   ============================================================ */
+
+.admin-section { padding: 20px; }
+.admin-title { font-size: 26px; margin-bottom: 20px; }
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.admin-card {
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+}
+
+.admin-wide { grid-column: 1 / -1; }
+
+.admin-subtitle {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* TABLES */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.table th {
+  text-align: left;
+  padding: 10px;
+  background: rgba(0,0,0,0.06);
+}
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ZEBRA ROWS */
+.zebra tr:nth-child(even) {
+  background: rgba(0,0,0,0.04);
+}
+
+/* ROLE TAGS */
+.role-tag {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  background: rgba(0,0,0,0.06);
+}
+.role-admin { background: #b87fff33; color: #6d3cf5; }
+.role-user { background: #4C8C2B22; color: var(--accent); }
+
+/* EMPTY STATE */
+.empty-state {
+  padding: 30px;
+  text-align: center;
+  border-radius: var(--radius);
+  font-size: 15px;
+  border: 1px dashed var(--glass-border);
+}
+
+/* ============================================================
+   AUTH (Login, Register, Profile)
+   ============================================================ */
+
+.auth-card {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 28px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+}
+.auth-card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.auth-card label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.auth-card input, .auth-card select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+}
+.actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 960px) {
+  .app-shell {
+    grid-template-columns: 0 1fr;
+  }
+  .left-sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: var(--sidebar-width);
+  }
+  .chat-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .visual-card { margin-top: 18px; }
+  .messages { height: 55vh; }
+}
+
+
+/* ============================================================
+   DYNAMIC SIDEBAR BEHAVIOR
+   ============================================================ */
+
+/* when collapsed */
+.app-shell.sidebar-collapsed {
+  grid-template-columns: 0 1fr !important;
+}
+
+/* slide animation */
+.left-sidebar {
+  transform: translateX(0);
+  transition: transform 0.30s ease, opacity 0.25s ease;
+}
+
+.app-shell.sidebar-collapsed .left-sidebar {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* topbar shifts nicely */
+.topbar {
+  transition: padding-left 0.30s ease;
+}
+
+body.sidebar-hidden .topbar {
+  padding-left: 14px; /* compact */
+}
+
+body:not(.sidebar-hidden) .topbar {
+  padding-left: 22px; /* normal */
+}
+
+/* main area expands animated */
+.main-area {
+  transition: margin-left 0.30s ease;
+}
+
+body.sidebar-hidden .main-area {
+  margin-left: 0px;
+}
+
+/* desktop refinement */
+@media (min-width: 960px) {
+  body:not(.sidebar-hidden) .main-area {
+    margin-left: 0;
+  }
+}
+
+
+/* ---------------------------
+   Input color tweak (dark)
+   --------------------------- */
+:root {
+  --input-text: #2a2f28; /* default for light */
+  --input-placeholder: #7a857a;
+}
+
+/* darker but legible for dark theme */
+:root[data-theme='dark']{
+  --input-text: #bfc8c0;        /* soft grey-green for typed text in dark mode */
+  --input-placeholder: #8f9b8d; /* placeholder */
+}
+
+/* ensure chat input uses token */
+.chat-form input,
+.auth-card input,
+.auth-card select {
+  color: var(--input-text);
+}
+
+/* placeholder color */
+.chat-form input::placeholder,
+.auth-card input::placeholder,
+.auth-card select::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+/* ---------------------------
+   Icon action button styling
+   --------------------------- */
+.msg-actions {
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-left:10px;
+}
+
+/* icon-only buttons */
+.action-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  width:34px;
+  height:34px;
+  padding:6px;
+  border-radius:8px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.06);
+  cursor:pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  color: var(--muted);
+}
+
+/* slightly larger clickable area for accessibility */
+.action-btn[title] {
+  position:relative;
+}
+.action-btn svg {
+  width:16px;
+  height:16px;
+  display:block;
+  pointer-events:none;
+}
+
+/* hover states */
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  color: var(--text);
+  background: rgba(255,255,255,0.02);
+}
+
+/* different color for small danger/regenerate states */
+.action-btn.regen { border-color: rgba(122,220,255,0.18); }
+.action-btn.copy { border-color: rgba(120,140,120,0.06); }
+.action-btn.edit { border-color: rgba(76,140,43,0.12); }
+
+/* make sure action toolbar doesn't overflow small messages */
+.msg-actions { z-index: 10; }
+
+/* hide regenerate by default; will be added by JS only to the latest bot message */
+.action-btn.regen { display:inline-flex; }

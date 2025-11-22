@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="admin-section fade-in">
+
+  <div class="admin-card glass admin-narrow">
+    <h2 class="admin-title">User Details</h2>
+
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Name:</strong> {{ user.name }}</p>
+    <p><strong>Role:</strong> 
+      <span class="role-tag {{ 'role-admin' if user.role=='admin' else 'role-user' }}">
+        {{ user.role }}
+      </span>
+    </p>
+
+    <h3 class="admin-subtitle">Chat History</h3>
+
+    {% if chats %}
+      <ul class="admin-chat-list">
+        {% for c in chats %}
+        <li class="glass chat-item">
+          <strong>You:</strong> {{ c.user_message }}<br>
+          <strong>Bot:</strong> {{ c.bot_response }}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No chats from this user.</p>
+    {% endif %}
+  </div>
+
+</section>
+
+{% endblock %}

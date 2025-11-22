@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero glass hero-aurora" aria-labelledby="hero-title">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <img src="{{ url_for('static', filename='bot.png') }}" alt="AI-AgroBot" class="hero-logo" style="width:68px;border-radius:14px;">
+      <h1 id="hero-title" class="hero-title">Your Smart AI Agronomist — Powered by Ultra-AI</h1>
+      <p class="hero-sub">
+        Region-aware farming guidance, instant crop & pest diagnosis, soil advice and field analytics — all in one place.
+      </p>
+      <br>
+      <!-- Search / Quick ask (expands on focus) -->
+      <form class="hero-search" role="search" onsubmit="event.preventDefault(); document.location.href='{{ url_for('chat') }}';">
+        <label for="hero-query" class="visually-hidden">Ask AI-AgroBot</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="search-box" style="flex:1;">
+            <input id="hero-query" class="chat-search" placeholder="Ask something or upload an image — e.g. 'Why are my leaves yellow?'" aria-label="Ask AI-AgroBot">
+          </div>
+
+          <button class="btn cta-btn" type="submit" title="Ask the Agronomist">
+            <!-- inline rocket / send icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 2l-7 20 3-7 7-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11 13L2 14l4-9 5 8z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ask
+          </button>
+
+          <!--<button class="btn ghost" type="button" onclick="document.getElementById('imageInput')?.click()" title="Upload image">
+            📎 Upload
+          </button> -->
+
+          <input type="file" id="imageInput" accept="image/*" style="display:none">
+        </div>
+      </form>
+
+      <div class="hero-cta-group" style="margin-top:16px;display:flex;gap:12px;align-items:center;">
+        <a href="{{ url_for('chat') }}" class="btn">💬 Start Chat</a>
+        <a href="{{ url_for('chat') }}" class="btn ghost">Explore Features</a>
+      </div>
+
+      <div class="hero-meta muted" style="margin-top:12px;">
+        Powered by: 
+        <!--<span title="Gemini" style="display:inline-flex;align-items:center;gap:8px;margin-left:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4" fill="none"/></svg> Gemini
+        </span> -->
+        <span style="margin-left:12px;opacity:.9;">•</span>
+        <span style="margin-left:12px;">AgroBot  </span>
+        <span style="margin-left:12px;opacity:.9;">•</span>
+        <span style="margin-left:12px;"> OpenRouter API Key </span>
+        <span style="margin-left:12px;opacity:.9;">•</span>
+        <span style="margin-left:12px;"> OpenRouter Model reasoning </span>
+      </div>
+    </div>
+
+    <!-- Right visual: orb + small cards -->
+     <!--
+    <aside class="hero-visual" aria-hidden="true" style="display:flex;flex-direction:column;gap:14px;align-items:flex-end;">
+      <div class="visual-card glass" style="display:flex;align-items:center;gap:12px;padding:18px 20px;min-width:220px;">
+        <div id="hero-orb" aria-hidden="true" style="width:72px;height:72px;border-radius:999px;display:flex;align-items:center;justify-content:center;">
+    -->
+          <!-- subtle orb with leaf icon -->
+           <!--
+          <svg width="48" height="48" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 21s4-4 9-4 9 4 9 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M12 3c2.5 0 5 2 6 4 0 0-4 1-6 1s-6-1-6-1c1-2 3.5-4 6-4z" fill="currentColor" opacity="0.08"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight:700">Live Scan</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">Upload an image — get instant diagnosis</div>
+        </div>
+      </div>
+
+      <div class="visual-card glass small" style="min-width:200px;padding:12px;display:flex;gap:10px;align-items:center;">
+        <svg width="36" height="36" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
+        <div>
+          <div style="font-weight:700">Pest Alerts</div>
+          <div class="muted" style="font-size:13px; margin-top:4px">Realtime field warnings</div>
+        </div>
+      </div>
+    </aside>
+    -->
+  </div>
+</section>
+
+<!-- WHAT CAN I HELP WITH (card grid) -->
+<section id="features" class="features glass" style="margin-top:22px;">
+  <div class="features-inner" style="display:grid;gap:14px;">
+    <h2 class="section-title">What AI-AgroBot Can Do</h2>
+    <p class="section-sub">Choose an action or start typing a question — the assistant adapts to your needs.</p>
+
+    <div class="feature-grid" style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:14px;margin-top:12px;">
+      <article class="feature glass" style="padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--surface),transparent);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px 0;">Diagnose Crop</h3>
+          <p class="muted" style="margin:0;font-size:14px;">Upload a photo — get health, nutrient & pest insights with next steps.</p>
+        </div>
+      </article>
+
+      <article class="feature glass" style="padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--surface),transparent);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px 0;">Soil & Fertilizer Advice</h3>
+          <p class="muted" style="margin:0;font-size:14px;">Region-aware fertilizer plans and pH/NPK tips.</p>
+        </div>
+      </article>
+
+      <article class="feature glass" style="padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--surface),transparent);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18" stroke="currentColor" stroke-width="1.4"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px 0;">Pest & Disease Alerts</h3>
+          <p class="muted" style="margin:0;font-size:14px;">Identify threats and view organic & chemical control options.</p>
+        </div>
+      </article>
+
+      <article class="feature glass" style="padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--surface),transparent);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h20" stroke="currentColor" stroke-width="1.4"/></svg>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px 0;">Field Analytics</h3>
+          <p class="muted" style="margin:0;font-size:14px;">Weather, yield estimates, irrigation suggestions and charts.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MODEL SHOWCASE STRIP -->
+ <!--
+<div class="glass" style="margin:20px 0;padding:10px 14px;border-radius:12px;display:flex;align-items:center;gap:12px;justify-content:center">
+  <div style="display:flex;gap:18px;align-items:center;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      <small class="muted">Gemini-style context</small>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      <small class="muted">GPT reasoning</small>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18" stroke="currentColor" stroke-width="1.4"/></svg>
+      <small class="muted">Claude concision</small>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20" stroke="currentColor" stroke-width="1.4"/></svg>
+      <small class="muted">Grok wit (optional)</small>
+    </div>
+  </div>
+</div>
+-->
+
+<!-- CAROUSEL (simple JS slider) -->
+<section class="glass" style="padding:12px;border-radius:12px;">
+  <div id="featureCarousel" style="position:relative;overflow:hidden;border-radius:10px;">
+    <div class="carousel-track" style="display:flex;transition:transform .7s ease;">
+      <div class="carousel-item" style="min-width:100%;padding:24px;display:flex;gap:18px;align-items:center;">
+        <div style="flex:1;">
+          <h3>Crop Health Scan</h3>
+          <p class="muted">Upload a photo and see disease bounding boxes, stress heatmap and suggested chemical/organic remedies.</p>
+        </div>
+        <div style="width:220px;">
+          <!-- <img src="{{ url_for('static', filename='img/card-ai-1.png') }}" alt="scan" style="width:100%;border-radius:10px;box-shadow:var(--shadow-soft);"> -->
+        </div>
+      </div>
+
+      <div class="carousel-item" style="min-width:100%;padding:24px;display:flex;gap:18px;align-items:center;">
+        <div style="flex:1;">
+          <h3>Soil Health Metrics</h3>
+          <p class="muted">Get NPK, pH guidance, and fertilizer schedules tailored per crop and region.</p>
+        </div>
+        <div style="width:220px;">
+          <!--<img src="{{ url_for('static', filename='img/card-ai-3.png') }}" alt="soil" style="width:100%;border-radius:10px;box-shadow:var(--shadow-soft);"> -->
+        </div>
+      </div>
+
+      <div class="carousel-item" style="min-width:100%;padding:24px;display:flex;gap:18px;align-items:center;">
+        <div style="flex:1;">
+          <h3>Pest Detection</h3>
+          <p class="muted">Receive pest id, life-cycle stage, and suggested timings for intervention.</p>
+        </div>
+        <div style="width:220px;">
+          <!-- <img src="{{ url_for('static', filename='img/card-ai-2.png') }}" alt="pest" style="width:100%;border-radius:10px;box-shadow:var(--shadow-soft);"> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS GRID -->
+
+<section class="features glass" style="margin-top:18px;">
+<div class="features-inner">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;">
+<!--
+  <div class="features-inner">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;">
+      <a class="glass" href="#" style="padding:14px;border-radius:10px;text-align:center;">
+        <div style="font-weight:700">Weather</div>
+        <div class="muted" style="font-size:13px">Local forecasts & alerts</div>
+      </a>
+-->
+    
+      <a class="glass" href="#" style="padding:14px;border-radius:10px;text-align:center;">
+        <div style="font-weight:700">Irrigation Calc</div>
+        <div class="muted" style="font-size:13px">Water needs per hectare</div>
+      </a>
+
+      <a class="glass" href="#" style="padding:14px;border-radius:10px;text-align:center;">
+        <div style="font-weight:700">Crop Plans</div>
+        <div class="muted" style="font-size:13px">Sowing → harvest timeline</div>
+      </a>
+
+      <a class="glass" href="#" style="padding:14px;border-radius:10px;text-align:center;">
+        <div style="font-weight:700">Translate</div>
+        <div class="muted" style="font-size:13px">Auto language detection</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Floating assistant bubble -->
+<!--<button id="assistantBubble" aria-label="Open assistant" title="Ask AI-AgroBot" style="position:fixed;right:20px;bottom:20px;width:64px;height:64px;border-radius:999px;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px rgba(0,0,0,0.15);cursor:pointer;background:linear-gradient(180deg,var(--accent), color-mix(in srgb,var(--accent) 80%, black 6%));color:var(--accent-contrast);z-index:9999;"> -->
+<button id="assistantBubble" aria-label="Open assistant" title="Ask AI-AgroBot" style="position:fixed;right:20px;bottom:20px;width:64px;height:64px;border-radius:999px;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 40px rgba(0,0,0,0.15);cursor:pointer;background:linear-gradient(180deg,var(--aurora-1), color-mix(in srgb,var(--aurora-2) 75%, black 6%));color:var(--accent-contrast);z-index:9999;">
+  <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2C7 2 3 6 3 11c0 2.7 1.2 5.2 3.4 7.1L6 22l4-1.8c.9.2 1.9.3 2.9.3 5 0 9-4 9-9s-4-9-9-9z" fill="currentColor" opacity="0.06"></path>
+    <path d="M12 3v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M6 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<script>
+  // hero orb gentle float
+  (function(){
+    const orb = document.getElementById('hero-orb');
+    if(!orb) return;
+    let t = 0;
+    function floatOrb(){
+      t += 0.006;
+      orb.style.transform = `translateY(${Math.sin(t) * 6}px) rotate(${Math.sin(t/2)*3}deg)`;
+      requestAnimationFrame(floatOrb);
+    }
+    requestAnimationFrame(floatOrb);
+  })();
+
+  // simple carousel auto-slide
+  (function(){
+    const track = document.querySelector('#featureCarousel .carousel-track');
+    if(!track) return;
+    const items = track.children;
+    let idx = 0;
+    function goto(i){
+      idx = (i + items.length) % items.length;
+      track.style.transform = `translateX(${-idx * 100}%)`;
+    }
+    let auto = setInterval(()=> goto(idx+1), 5200);
+    // pause on hover
+    const wrap = document.getElementById('featureCarousel');
+    wrap.addEventListener('pointerenter', ()=> clearInterval(auto));
+    wrap.addEventListener('pointerleave', ()=> auto = setInterval(()=> goto(idx+1), 5200));
+  })();
+
+  // assistant bubble opens chat page
+  document.getElementById('assistantBubble').addEventListener('click', ()=> {
+    // small pulse animation
+    const el = document.getElementById('assistantBubble');
+    el.animate([{ transform: 'scale(1)' }, { transform: 'scale(0.96)' }, { transform: 'scale(1)' }], { duration: 160 });
+    window.location.href = "{{ url_for('chat') }}";
+  });
+
+  // search box focus => expand
+  document.querySelectorAll('.chat-search, #hero-query').forEach(inp=>{
+    inp?.addEventListener('focus', e=>{
+      e.target.style.boxShadow = '0 10px 30px rgba(63,164,59,0.08)';
+      e.target.closest('form')?.classList.add('focused');
+    });
+    inp?.addEventListener('blur', e=>{
+      e.target.style.boxShadow = '';
+      e.target.closest('form')?.classList.remove('focused');
+    });
+  });
+
+  // sidebar toggle behavior (sync with your existing script)
+  // if your script toggles .app-shell.sidebar-collapsed, rest of layout adapts via CSS already
+</script>
+
+<style>
+  /* micro helpers for this page */
+  .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;border:0;padding:0;margin:-1px}
+  .hero-search .chat-search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--glass-border);background:var(--surface);}
+  .feature-grid .feature{transition:transform .24s ease, box-shadow .24s ease}
+  .feature-grid .feature:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(0,0,0,0.06)}
+</style>
+
+{% endblock %}

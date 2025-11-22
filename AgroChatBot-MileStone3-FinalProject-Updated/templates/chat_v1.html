@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="chat-section fade-in">
+  <div class="chat-inner">
+
+    <!-- SIDEBAR -->
+    <aside class="chat-sidebar glass">
+      <h3>Your Profile</h3>
+
+      {% if current_user.is_authenticated %}
+        <p class="muted"><strong>{{ current_user.name or current_user.email }}</strong></p>
+        <p>Crop: <strong>{{ current_user.primary_crop or "—" }}</strong></p>
+        <p>Region: <strong>{{ current_user.region or "—" }}</strong></p>
+        <p>Lang: <strong>{{ current_user.preferred_language or "en" }}</strong></p>
+
+        <a class="btn small" href="{{ url_for('profile') }}">Edit Profile</a>
+
+      {% else %}
+        <p><a href="{{ url_for('login') }}" class="muted">Login</a> to save chats & get personalized tips.</p>
+      {% endif %}
+
+      {% if current_user.is_authenticated and current_user.role == 'admin' %}
+        <hr>
+        <h4>Recent Users (Admin)</h4>
+        <ul class="user-list">
+          {% for u in recent_users %}
+            <li><a href="{{ url_for('admin_view_user', user_id=u.id) }}">{{ u.email }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </aside>
+
+    <!-- CHAT PANEL -->
+    <div class="chat-panel">
+
+      <div class="chat-header glass">
+        <div class="chat-title">
+          <img src="{{ url_for('static', filename='bot.png') }}" class="chat-logo">
+          <div>
+            <strong>AI-AgroBot</strong><br>
+            <small class="muted">Pocket agronomist assistant</small>
+          </div>
+        </div>
+      </div>
+
+      <div id="messages" class="messages"></div>
+
+      <form id="chatForm" class="chat-form" onsubmit="return false;">
+        <input id="msg" placeholder="Ask about crops, pests or soil…" autocomplete="off">
+
+        <label for="imageInput" class="btn file-btn">📎</label>
+        <input type="file" id="imageInput" accept="image/*" hidden>
+
+        <button id="voiceBtn" type="button" class="btn">🎤</button>
+        <button id="sendBtn" type="button" class="btn primary">Send</button>
+      </form>
+
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
